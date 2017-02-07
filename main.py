@@ -69,7 +69,7 @@ def images(filename):
     return static_file(filename, root='images')
 
 def main():
-    run(host='localhost', port=9000)
+    run(host='localhost', port=9001)
 
 if __name__ == '__main__':
     main()
