@@ -61,6 +61,7 @@ Adventures.chooseOption = function(){
             $('#life').text(Adventures.life);
             Adventures.gameOver=data.gameOver; // we would need to create it in the database
             console.log(Adventures.gameOver);
+            Adventures.restart();
         }
     });
 };
@@ -121,6 +122,8 @@ Adventures.initAdventure = function(){
             Adventures.write(data);
             $(".adventure").show();
             $(".welcome-screen").hide();
+            Adventures.currentAdventure=data.adventure; //that we will have to put in the database
+            Adventures.currentUser=data.user; //that we will have to put also
         }
     });
 };
