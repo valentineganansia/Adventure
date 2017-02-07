@@ -8,6 +8,7 @@ Adventures.currentUser = 0;//todo keep track from db
 Adventures.coins = 10;
 Adventures.life = 100;
 Adventures.gameOver= false; //defining the game to false because we don't know already what's going on.
+//Adventures.questions=0;
 
 
 //TODO: remove for production

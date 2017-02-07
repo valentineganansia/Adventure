@@ -1,6 +1,6 @@
 
 body{
-    background-image:url('../images/forest.jpg');
+    background-image:url('../images/jungle.jpg');
     font-family: 'Roboto', sans-serif;
     overflow: hidden;
 }
@@ -20,6 +20,7 @@ body{
 }
 .greeting-text{
 text-align:center;
+color:#006600;
 }
 .choice-box{
 	display: inline-block;
@@ -29,35 +30,41 @@ text-align:center;
     transform: translateY(-50%) translateX(-50%);
     left: 50%;
     position: absolute !important;
-    background-color:#FFD6A8;
+    background-color:#f2f2f2;
 }
 .situation-text{
     display:block;
+    color:#8c8c8c;
+}
+#situation-image{
+height:300px
 }
 .name-text{
     display: inline-block;
+    color:#8c8c8c;
 }
-
-
-
-
+#coins,#life{
+color:#ff66ff;
+}
+.btn{
+background-color:rgb(110, 180, 91)
+}
 .option-select{
 	padding:5px 300px;
 	margin: 0 5px;
 	display:block;
-	background-color:#00FF7F;
+	background-color:rgb(99, 160, 82);
 	vertical-align: bottom;
 }
-
-
 
 .situation-text-holder{
 	text-align: center;
 	display: block;
 }
 
-
-
+.h1{
+color:#cccccc;
+}
 
 .copyright{
     position: fixed;

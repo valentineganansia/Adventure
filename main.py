@@ -29,12 +29,14 @@ def start():
         {"id": 4, "option_text": "I run away quickly"}
         ]
 
+
+
     #todo add the next step based on db
     return json.dumps({"user": user_id,
                        "adventure": current_adv_id,
                        "current": current_story_id,
                        "text": "You meet a mysterious creature in the woods, what do you do?",
-                       "image": "troll.png",
+                       "image": "creature.jpg",
                        "options": next_steps_results
                        })
 
