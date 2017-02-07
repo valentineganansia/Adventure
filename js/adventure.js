@@ -5,11 +5,18 @@ Adventures.currentAdventure = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
 Adventures.currentStep = 0;//todo keep track from db
 Adventures.currentUser = 0;//todo keep track from db
+Adventures.coins = 10;
+Adventures.life = 100;
 
 
 //TODO: remove for production
 Adventures.debugMode = true;
 Adventures.DEFAULT_IMG = "./images/choice.jpg";
+
+Adventures.lifeAndCoinsUpdate=function(coin,life){
+Adventures.coins=Adventures.coins-coin;
+Adventures.life=Adventures.life-life;
+};
 
 
 //Handle Ajax Error, animation error and speech support
@@ -35,12 +42,21 @@ Adventures.chooseOption = function(){
         data: {"user": Adventures.currentUser,
             "adventure": Adventures.currentAdventure,
             "next": Adventures.currentStep},
+            "coins":Adventures.coins,
+            "life":Adventures.life,
+
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             console.log(data);
             $(".greeting-text").hide();
             Adventures.write(data);
+            Adventures.coins=data.coins;
+            console.log(Adventures.coinStatus);
+            Adventures.life=data.life;
+            console.log(Adventures.lifeStatus);
+            $("#coins").text(Adventures.coins);
+            $('#life').text(Adventures.life);
         }
     });
 };
@@ -64,6 +80,8 @@ Adventures.start = function(){
         $(".adventure-button").click(Adventures.initAdventure);
         $(".adventure").hide();
         $(".welcome-screen").show();
+        $("#coins").text(Adventures.coins);
+        $('#life').text(Adventures.life);
     });
 };
 
@@ -89,6 +107,8 @@ Adventures.initAdventure = function(){
         data: {"user":
             $("#nameField").val(),
             "adventure_id": $(this).val()
+          //  "coins":Adventures.coinStatus,
+          //  "life":Adventures.lifeStatus,
         },
         dataType: "json",
         contentType: "application/json",
