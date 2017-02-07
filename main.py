@@ -1,6 +1,14 @@
 from bottle import route, run, template, static_file, request
 import random
 import json
+import pymysql
+
+connection= pymysql.connect(host="localhost",
+                             user="root",
+                             password="caroline5526V",
+                             db="adventure",
+                             charset="utf8",
+                             cursorclass=pymysql.cursors.DictCursor)
 
 
 @route("/", method="GET")
@@ -12,6 +20,8 @@ def index():
 def start():
     username = request.POST.get("name")
     current_adv_id = request.POST.get("adventure_id")
+    print(username)
+    # current_story_id=0
 
 # def gameOver(life,current_step):
 #     try:
@@ -61,6 +71,11 @@ def story():
                        "image": "choice.jpg",
                        "options": next_steps_results
                        })
+# def insertUser(username):
+#     with connection.cursor() as cursor:
+#         sql = "INSERT INTO users(`username`) VALUES (%s)"
+#         cursor.execute(sql, username)
+#         connection.commit()
 
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):
