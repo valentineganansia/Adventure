@@ -7,13 +7,14 @@ Adventures.currentStep = 0;//todo keep track from db
 Adventures.currentUser = 0;//todo keep track from db
 Adventures.coins = 10;
 Adventures.life = 100;
+Adventures.gameOver= false; //defining the game to false because we don't know already what's going on.
 
 
 //TODO: remove for production
 Adventures.debugMode = true;
 Adventures.DEFAULT_IMG = "./images/choice.jpg";
 
-Adventures.lifeAndCoinsUpdate=function(coin,life){
+Adventures.lifeAndCoinsUpdate=function(coin,life){ // will update the life and coins . Need to linked it with the database
 Adventures.coins=Adventures.coins-coin;
 Adventures.life=Adventures.life-life;
 };
@@ -53,10 +54,12 @@ Adventures.chooseOption = function(){
             Adventures.write(data);
             Adventures.coins=data.coins;
             console.log(Adventures.coinStatus);
-            Adventures.life=data.life;
+            Adventures.life=data.life; // we would need to create it in the database
             console.log(Adventures.lifeStatus);
-            $("#coins").text(Adventures.coins);
+            $("#coins").text(Adventures.coins); // we would need to create it in the database
             $('#life').text(Adventures.life);
+            Adventures.gameOver=data.gameOver; // we would need to create it in the database
+            console.log(Adventures.gameOver);
         }
     });
 };
@@ -134,6 +137,13 @@ Adventures.handleServerError = function (errorThrown) {
 Adventures.debugPrint = function (msg) {
     if (Adventures.debugMode) {
         console.log("Adventures DEBUG: " + msg)
+    }
+};
+
+Adventures.restart=function(){ // when the user loose or win
+    if (Adventures.gameOver) {
+        alert("gameOver")
+        location.reload();
     }
 };
 

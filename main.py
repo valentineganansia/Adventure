@@ -13,6 +13,12 @@ def start():
     username = request.POST.get("name")
     current_adv_id = request.POST.get("adventure_id")
 
+# def gameOver(life,current_step):
+#     try:
+#     with connection.cursor() as cursor:
+#         end_game = True
+#     print(end_game)
+
 
     user_id = 0 #todo check if exists and if not create it
     current_story_id = 0 #todo change
