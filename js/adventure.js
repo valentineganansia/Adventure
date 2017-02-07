@@ -1,4 +1,5 @@
 var Adventures = {};
+Adventures.SERVER_PATH = window.location.href.slice(0,-1);
 //currentAdventure is used for the adventure we're currently on (id). This should be determined at the beginning of the program
 Adventures.currentAdventure = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
