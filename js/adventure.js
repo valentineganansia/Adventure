@@ -120,10 +120,10 @@ Adventures.initAdventure = function(){
         success: function (data) {
             console.log(data);
             Adventures.write(data);
-            $(".adventure").show();
-            $(".welcome-screen").hide();
             Adventures.currentAdventure=data.adventure; //that we will have to put in the database
             Adventures.currentUser=data.user; //that we will have to put also
+             $(".adventure").show();
+            $(".welcome-screen").hide();
         }
     });
 };
