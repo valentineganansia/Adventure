@@ -2,14 +2,11 @@ from bottle import route, run, template, static_file, request
 import random
 import json
 import pymysql
-
 connection = pymysql.connect(host='sql11.freesqldatabase.com', user='sql11157852', password='3CCGQMva6k',db='sql11157852', charset='utf8', cursorclass = pymysql.cursors.DictCursor)
-
 
 @route("/", method="GET")
 def index():
     return template("adventure.html")
-
 
 @route("/start", method="POST")
 def start():
