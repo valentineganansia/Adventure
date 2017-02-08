@@ -3,7 +3,7 @@ import random
 import json
 import pymysql
 
-connection = pymysql.connect(host='sql9.freesqldatabase.com', user='sql11157852', password='3CCGQMva6k',db='sql11157852', charset='utf8', cursorclass = pymysql.cursors.DictCursor)
+connection = pymysql.connect(host='sql11.freesqldatabase.com', user='sql11157852', password='3CCGQMva6k',db='sql11157852', charset='utf8', cursorclass = pymysql.cursors.DictCursor)
 
 
 @route("/", method="GET")
@@ -74,6 +74,53 @@ def start():
         print(repr(e))
 
 
+# def UserInfo(username): #taking the user informations
+#     with connection.cursor() as cursor:
+#         sql = "SELECT * from users where '{}'".format(username)
+#         cursor.execute(sql)
+#         user_id = cursor.fetchone()
+#         print(user_id)
+#         return user_id
+
+# def Options(option_id): #I'm really not sure about this one
+#     with connection.cursor() as cursor:
+#         sql1 = "SELECT option_id from options where question_id='{}' ORDER BY option_id ASC".format(
+#             option_id)
+#         cursor.execute(sql1)
+#          = cursor.fetchall()
+#         print()
+#         return
+
+# def nextQuestions (question_id,next_question_id)
+#     with connection.cursor() as cursor:
+#         sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
+#         cursor.execute(sql)
+#  = cursor.fetchone()
+#  print(["next_question_id"])
+# return
+
+# def updateUser(coins,life,next_question_id,question_id):
+#     with connection.cursor() as cursor:
+#         sql2 = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
+#         cursor.execute(sql2)
+#         connection.commit()
+
+# def insert_user_name(username):
+#     with connection.cursor() as cursor:
+#         sql3 = "INSERT INTO users(`username`) VALUES (%s)"
+#         cursor.execute(sql3, username)
+#         connection.commit()
+
+
+# def gameOver(user_id):
+#     with connection.cursor() as cursor:
+#         end = True
+#         print(end)
+#         sql4 = "UPDATE Users SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(10,100,user_id)
+#         cursor.execute(sql4)
+#         connection.commit()
+#         return True
+
 @route("/story", method="POST")
 def story():
     user_id = request.POST.get("user")
@@ -129,13 +176,6 @@ def start():
     current_adv_id = request.POST.get("adventure_id")
     print(username)
     # current_story_id=0
-
-# def gameOver(life,current_step):
-#     try:
-#     with connection.cursor() as cursor:
-#         end_game = True
-#     print(end_game)
-
 
     user_id = 0 #todo check if exists and if not create it
     current_story_id = 0 #todo change
@@ -199,7 +239,7 @@ def images(filename):
     return static_file(filename, root='images')
 
 def main():
-    run(host='localhost', port=9001)
+    run(host='localhost', port=9000)
 
 if __name__ == '__main__':
     main()
