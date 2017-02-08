@@ -1,9 +1,8 @@
-
-body{
-    background-image:url('../images/jungle.jpg');
+body{   background-image: url(../images/jungle.jpg);
     font-family: 'Roboto', sans-serif;
     overflow: hidden;
-}
+    background-size: cover;
+    }
 
 .clickable{
 	cursor:pointer;
