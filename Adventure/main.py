@@ -5,143 +5,117 @@ import pymysql
 
 connection = pymysql.connect(host='sql11.freesqldatabase.com', user='sql11157852', password='3CCGQMva6k',db='sql11157852', charset='utf8', cursorclass = pymysql.cursors.DictCursor)
 
-
 @route("/", method="GET")
 def index():
     return template("adventure.html")
 
-
 @route("/start", method="POST")
-def start():
-    try:
-        with connection.cursor() as cursor:
-            username = request.POST.get("name")
-            current_adv_id = request.POST.get("adventure_id")
-            user_id = 0
-            current_story_id = 0
+def start(): #I just change everything here Olivia.
 
-            sql = "SELECT name, id, current_step, adventure_id FROM userinfo"
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            print("cursor result:", result)
+    with connection.cursor() as cursor:
+        username = request.POST.get("username")
+        question_id = request.POST.get("question_id")
+        user_id = 0
+        question_id = 0
+        print (username)
+        sql = "SELECT username, user_id FROM Users where username='{}'".format(username)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        if result:
+            print("User already there", result)
+        else:
+            print("else, no username")
+            newUser = "INSERT INTO Users (username, question_id) VALUES ('{0}', '{1}')".format(username,
+                                                                                               question_id)
+            cursor.execute(newUser)
+            connection.commit()
+            print("new username result:",username)
 
-            for item in result:
-                if item["name"] == username:
-
-                    sql1 = "SELECT adventure_id FROM userinfo WHERE name = '{}'".format(username)
-                    cursor.execute(sql1)
-                    user_adventures = cursor.fetchall()
-
-                    for info in user_adventures:
-                        if {"adventure_id": current_adv_id} == info:
-                            add_new_adventure = "INSERT INTO userinfo (name, current_step, adventure_id) VALUES ('{0}', '{1}', '{2}')".format(username, current_story_id, current_adv_id)
-                            cursor.execute(add_new_adventure)
-                            connection.commit()
-
-                    else:
-                        sql2 = "SELECT adventure_id, current_step, id FROM userinfo WHERE name = '{}'".format(username)
-                        cursor.execute(sql2)
-                        username_info = cursor.fetchall()
-
-                        for info in username_info:
-                            if info["adventure_id"] == current_adv_id:
-                                user_id = item["id"]
-                                current_story_id = int(item["current_step"])
-
-                else:
-                    print("else, no username")
-                    add_user = "INSERT INTO userinfo (name, current_step, adventure_id) VALUES ('{0}', '{1}', '{2}')".format(username, current_story_id, current_adv_id)
-                    cursor.execute(add_user)
-                    connection.commit()
-
-            next_steps_results = [
-                {"id": 1, "option_text": "I fight it"},
-                {"id": 2, "option_text": "I give him 10 coins"},
-                {"id": 3, "option_text": "I tell it that I just want to go home"},
-                {"id": 4, "option_text": "I run away quickly"}
-                ]
-
-            #todo add the next step based on db
-            return json.dumps({"user": user_id,
-                               "adventure": current_adv_id,
-                               "current": current_story_id,
-                               "next": current_story_id + 1, #is this right?????
-                               "text": "You meet a mysterious creature in the woods, what do you do?",
-                               "image": "troll.png",
-                               "options": next_steps_results
-                               })
-    except Exception as e:
-        print(repr(e))
-
-
-# def UserInfo(username): #taking the user informations
-#     with connection.cursor() as cursor:
-#         sql = "SELECT * from users where '{}'".format(username)
-#         cursor.execute(sql)
-#         user_id = cursor.fetchone()
-#         print(user_id)
-#         return user_id
-
-# def Options(option_id): #I'm really not sure about this one
-#     with connection.cursor() as cursor:
-#         sql1 = "SELECT option_id from options where question_id='{}' ORDER BY option_id ASC".format(
-#             option_id)
-#         cursor.execute(sql1)
-#          = cursor.fetchall()
-#         print()
-#         return
-
-# def nextQuestions (question_id,next_question_id)
-#     with connection.cursor() as cursor:
-#         sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
-#         cursor.execute(sql)
-#  = cursor.fetchone()
-#  print(["next_question_id"])
-# return
-
-# def updateUser(coins,life,next_question_id,question_id):
-#     with connection.cursor() as cursor:
-#         sql2 = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
-#         cursor.execute(sql2)
-#         connection.commit()
-
-# def insert_user_name(username):
-#     with connection.cursor() as cursor:
-#         sql3 = "INSERT INTO users(`username`) VALUES (%s)"
-#         cursor.execute(sql3, username)
-#         connection.commit()
-
-
-# def gameOver(user_id):
-#     with connection.cursor() as cursor:
-#         end = True
-#         print(end)
-#         sql4 = "UPDATE Users SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(10,100,user_id)
-#         cursor.execute(sql4)
-#         connection.commit()
-#         return True
-
-@route("/story", method="POST")
-def story():
-    user_id = request.POST.get("user")
-    current_adv_id = request.POST.get("adventure")
-    next_story_id = request.POST.get("next") #this is what the user chose - use it!
-    next_steps_results = [
-        {"id": 1, "option_text": "I run!"},
-        {"id": 2, "option_text": "I hide!"},
-        {"id": 3, "option_text": "I sleep!"},
-        {"id": 4, "option_text": "I fight!"}
-        ]
-    random.shuffle(next_steps_results) #todo change - used only for demonstration purpouses
+            # next_steps_results = [
+            #     {"id": 1, "option_text": "I fight it"},
+            #     {"id": 2, "option_text": "I give him 10 coins"},
+            #     {"id": 3, "option_text": "I tell it that I just want to go home"},
+            #     {"id": 4, "option_text": "I run away quickly"}
+            #     ]
 
     #todo add the next step based on db
-    return json.dumps({"user": user_id,
-                       "adventure": current_adv_id,
-                       "next": next_story_id,
-                       "text": "New scenario! What would you do?",
-                       "image": "choice.jpg",
-                       "options": next_steps_results
-                       })
+            # return json.dumps({"user": user_id,
+            #                    "adventure": question_id,
+            #                    "next": next_question_id, #is this right?????
+            #                    "question_id":{},
+            #                    "image": "troll.png",
+            #                    "options": option_id,
+            #                    })
+    # except Exception as e:
+    #     print(repr(e))
+
+
+ # def UserInfo():
+ #     username = request.POST.get("username")
+ #     with connection.cursor() as cursor:
+ #        sql = "SELECT * from users where '{}'".format(username)
+ #        cursor.execute(sql)
+ #        user_id = cursor.fetchone()
+ #        print(user_id)
+ #        return user_id
+
+def Options(option_id): #I'm really not sure about this one but I don't had any error message so I think it works.
+      with connection.cursor() as cursor:
+        sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(option_id)
+        cursor.execute(sql)
+        print(["option_id"])
+        return option_id
+
+def nextQuestions (question_id,next_question_id):
+       with connection.cursor() as cursor:
+         sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
+         cursor.execute(sql)
+         print(["next_question_id"])
+         return question_id,next_question_id
+
+def updateUser(coins,life,next_question_id,question_id):
+       with connection.cursor() as cursor:
+           sql = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
+           cursor.execute(sql)
+           connection.commit()
+           print(coins,life,next_question_id,question_id)
+
+def insert_user_name(username):
+      with connection.cursor() as cursor:
+           sql = "INSERT INTO users(`username`) VALUES (%s)"
+           cursor.execute(sql, username)
+           connection.commit()
+
+def gameOver(user_id):
+      with connection.cursor() as cursor:
+          end = True
+          print(end)
+          sql = "UPDATE Users SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(10,100,user_id)
+          cursor.execute(sql)
+          connection.commit()
+          return True
+
+@route("/story", method="POST")
+# def story():
+#     user_id = request.POST.get("user")
+#     question_id = request.POST.get("adventure")
+#     next_question_id = request.POST.get("next") #this is what the user chose - use it!
+#     option_id = [
+#         {"id": 1, "option_text": "I run!"},
+#         {"id": 2, "option_text": "I hide!"},
+#         {"id": 3, "option_text": "I sleep!"},
+#         {"id": 4, "option_text": "I fight!"}
+#         ]
+#     random.shuffle(next_question_id) #todo change - used only for demonstration purpouses
+#
+#     todo add the next step based on db
+    # return json.dumps({"user": user_id,
+    #                    "adventure": question_id,
+    #                    "next": next_question_id,
+    #                    "text":{},
+    #                    "image": "choice.jpg",
+    #                    "options": option_id
+    #                    })
 
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):
@@ -158,88 +132,7 @@ def images(filename):
     return static_file(filename, root='images')
 
 def main():
-    run(host='localhost', port=9000)
-
-if __name__ == '__main__':
-    main()
-
-
-
-@route("/", method="GET")
-def index():
-    return template("adventure.html")
-
-
-@route("/start", method="POST")
-def start():
-    username = request.POST.get("name")
-    current_adv_id = request.POST.get("adventure_id")
-    print(username)
-    # current_story_id=0
-
-    user_id = 0 #todo check if exists and if not create it
-    current_story_id = 0 #todo change
-    next_steps_results = [
-        {"id": 1, "option_text": "I fight it"},
-        {"id": 2, "option_text": "I give him 10 coins"},
-        {"id": 3, "option_text": "I tell it that I just want to go home"},
-        {"id": 4, "option_text": "I run away quickly"}
-        ]
-
-
-
-    #todo add the next step based on db
-    return json.dumps({"user": user_id,
-                       "adventure": current_adv_id,
-                       "current": current_story_id,
-                       "text": "You meet a mysterious creature in the woods, what do you do?",
-                       "image": "creature.jpg",
-                       "options": next_steps_results
-                       })
-
-
-@route("/story", method="POST")
-def story():
-    user_id = request.POST.get("user")
-    current_adv_id = request.POST.get("adventure")
-    next_story_id = request.POST.get("next") #this is what the user chose - use it!
-    next_steps_results = [
-        {"id": 1, "option_text": "I run!"},
-        {"id": 2, "option_text": "I hide!"},
-        {"id": 3, "option_text": "I sleep!"},
-        {"id": 4, "option_text": "I fight!"}
-        ]
-    random.shuffle(next_steps_results) #todo change - used only for demonstration purpouses
-
-    #todo add the next step based on db
-    return json.dumps({"user": user_id,
-                       "adventure": current_adv_id,
-                       "text": "New scenario! What would you do?",
-                       "image": "choice.jpg",
-                       "options": next_steps_results
-                       })
-# def insertUser(username):
-#     with connection.cursor() as cursor:
-#         sql = "INSERT INTO users(`username`) VALUES (%s)"
-#         cursor.execute(sql, username)
-#         connection.commit()
-
-@route('/js/<filename:re:.*\.js$>', method='GET')
-def javascripts(filename):
-    return static_file(filename, root='js')
-
-
-@route('/css/<filename:re:.*\.css>', method='GET')
-def stylesheets(filename):
-    return static_file(filename, root='css')
-
-
-@route('/images/<filename:re:.*\.(jpg|png|gif|ico)>', method='GET')
-def images(filename):
-    return static_file(filename, root='images')
-
-def main():
-    run(host='localhost', port=9000)
+    run(host='localhost', port=8005)
 
 if __name__ == '__main__':
     main()

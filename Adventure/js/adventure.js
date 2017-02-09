@@ -1,7 +1,7 @@
 var Adventures = {};
 Adventures.SERVER_PATH = window.location.href.slice(0,-1);
 //currentAdventure is used for the adventure we're currently on (id). This should be determined at the beginning of the program
-Adventures.currentAdventure = 0; //todo keep track from db
+Adventures.questionId = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
 Adventures.currentStep = 0;//todo keep track from db
 Adventures.currentUser = 0;//todo keep track from db
@@ -41,9 +41,9 @@ Adventures.chooseOption = function(){
     Adventures.currentStep = $(this).val();
     $.ajax("/story",{
         type: "POST",
-        data: {"user": Adventures.currentUser,
-            "adventure": Adventures.currentAdventure,
-            "next": Adventures.currentStep},
+        data: {"username": Adventures.username,
+            "questionId": Adventures.questionId,
+            "nextquestion": Adventures.nextQuestionId},
             "coins":Adventures.coins,
             "life":Adventures.life,
 
@@ -87,6 +87,7 @@ Adventures.start = function(){
         $(".welcome-screen").show();
         $("#coins").text(Adventures.coins);
         $('#life').text(Adventures.life);
+
     });
 };
 
@@ -109,7 +110,7 @@ Adventures.initAdventure = function(){
 
     $.ajax("/start",{
         type: "POST",
-        data: {"user":
+        data: {"username":
             $("#nameField").val(),
             "adventure_id": $(this).val()
           //  "coins":Adventures.coinStatus,
@@ -120,9 +121,9 @@ Adventures.initAdventure = function(){
         success: function (data) {
             console.log(data);
             Adventures.write(data);
-            Adventures.currentAdventure=data.adventure; //that we will have to put in the database
-            Adventures.currentUser=data.user; //that we will have to put also
-             $(".adventure").show();
+            Adventures.questionId=data.questionId; //that we will have to put in the database
+            Adventures.username=data.username; //that we will have to put also
+             $(".questionId").show();
             $(".welcome-screen").hide();
         }
     });
