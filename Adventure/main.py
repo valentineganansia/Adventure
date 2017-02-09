@@ -31,13 +31,6 @@ def start(): #I just change everything here Olivia.
             connection.commit()
             print("new username result:",username)
 
-    return json.dump({"username": user_name,
-                       "questionId": question_id,
-                        "nextquestion":nextquestion,
-                       "coins": coins,
-                       "life": life,
-                       "option": option,
-                       })
             # next_steps_results = [
             #     {"id": 1, "option_text": "I fight it"},
             #     {"id": 2, "option_text": "I give him 10 coins"},
@@ -47,23 +40,24 @@ def start(): #I just change everything here Olivia.
 
     #todo add the next step based on db
             # return json.dumps({"user": user_id,
-                                # "username":username,
-            #                    "questionId": question_id,
-            #                    "nextQuestion": next_question_id, #is this right?????
+            #                    "adventure": question_id,
+            #                    "next": next_question_id, #is this right?????
+            #                    "question_id":{},
             #                    "image": "troll.png",
             #                    "options": option_id,
             #                    })
-    # except Exception as a:
-    #     print(repr(a))
+    # except Exception as e:
+    #     print(repr(e))
 
-def UserInfo():
-    with connection.cursor() as cursor:
-        username = request.POST.get("username")
-        sql = "SELECT * from users where '{}'".format(username)
-        cursor.execute(sql)
-        user_id = cursor.fetchone()
-    print(user_id)
-    return user_id
+
+ # def UserInfo():
+ #     username = request.POST.get("username")
+ #     with connection.cursor() as cursor:
+ #        sql = "SELECT * from users where '{}'".format(username)
+ #        cursor.execute(sql)
+ #        user_id = cursor.fetchone()
+ #        print(user_id)
+ #        return user_id
 
 def Options(option_id): #I'm really not sure about this one but I don't had any error message so I think it works.
       with connection.cursor() as cursor:
