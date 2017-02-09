@@ -1,12 +1,17 @@
 var Adventures = {};
 Adventures.SERVER_PATH = window.location.href.slice(0,-1);
 //currentAdventure is used for the adventure we're currently on (id). This should be determined at the beginning of the program
-Adventures.currentAdventure = 0; //todo keep track from db
+Adventures.questionId = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
 Adventures.currentStep = 0;//todo keep track from db
-Adventures.currentUser = 0;//todo keep track from db
+Adventures.username = 0;//todo keep track from db
 Adventures.coins = 10;
 Adventures.life = 100;
+Adventures.optionId;
+Adventures.nextQuestionId;
+Adventures.options;
+
+
 Adventures.gameOver= false; //defining the game to false because we don't know already what's going on.
 //Adventures.questions=0;
 
@@ -41,11 +46,12 @@ Adventures.chooseOption = function(){
     Adventures.currentStep = $(this).val();
     $.ajax("/story",{
         type: "POST",
-        data: {"user": Adventures.currentUser,
-            "adventure": Adventures.currentAdventure,
-            "next": Adventures.currentStep},
+        data: {"username": Adventures.username,
+            "questionId": Adventures.questionId,
+            "nextquestion": Adventures.nextQuestionId,
             "coins":Adventures.coins,
             "life":Adventures.life,
+            "options":Adventures.options}
 
         dataType: "json",
         contentType: "application/json",
@@ -54,9 +60,9 @@ Adventures.chooseOption = function(){
             $(".greeting-text").hide();
             Adventures.write(data);
             Adventures.coins=data.coins;
-            console.log(Adventures.coinStatus);
+            console.log(Adventures.coins);
             Adventures.life=data.life; // we would need to create it in the database
-            console.log(Adventures.lifeStatus);
+            console.log(Adventures.life);
             $("#coins").text(Adventures.coins); // we would need to create it in the database
             $('#life').text(Adventures.life);
             Adventures.gameOver=data.gameOver; // we would need to create it in the database
@@ -80,13 +86,14 @@ Adventures.write = function (message) {
 
 Adventures.start = function(){
     $(document).ready(function () {
-        $(".game-option").click(Adventures.chooseOption);
+        $(".game-option").click(Adventures.optionId);
         $("#nameField").keyup(Adventures.checkName);
         $(".adventure-button").click(Adventures.initAdventure);
         $(".adventure").hide();
         $(".welcome-screen").show();
         $("#coins").text(Adventures.coins);
         $('#life').text(Adventures.life);
+
     });
 };
 
@@ -109,20 +116,18 @@ Adventures.initAdventure = function(){
 
     $.ajax("/start",{
         type: "POST",
-        data: {"user":
+        data: {"username":
             $("#nameField").val(),
-            "adventure_id": $(this).val()
-          //  "coins":Adventures.coinStatus,
-          //  "life":Adventures.lifeStatus,
+            "user_id": $(this).val()
         },
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             console.log(data);
             Adventures.write(data);
-            Adventures.currentAdventure=data.adventure; //that we will have to put in the database
-            Adventures.currentUser=data.user; //that we will have to put also
-             $(".adventure").show();
+            Adventures.questionId=data.questionId;
+            Adventures.username=data.username;
+             $(".questionId").show();
             $(".welcome-screen").hide();
         }
     });
