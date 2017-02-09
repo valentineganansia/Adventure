@@ -31,13 +31,15 @@ def start(): #I just change everything here Olivia.
             connection.commit()
             print("new username result:",username)
 
-    return json.dump({"username": user_name,
-                       "questionId": question_id,
-                        "nextquestion":nextquestion,
-                       "coins": coins,
-                       "life": life,
-                       "option": option,
-                       })
+
+    # return json.dump({"username": user_name,
+    #                    "questionId": question_id,
+    #                     "nextquestion":nextquestion,
+    #                    "coins": coins,
+    #                    "life": life,
+    #                    "option": option,
+    #                    })
+
             # next_steps_results = [
             #     {"id": 1, "option_text": "I fight it"},
             #     {"id": 2, "option_text": "I give him 10 coins"},
