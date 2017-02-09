@@ -103,6 +103,17 @@ def gameOver(user_id):
           connection.commit()
           return True
 
+def knowTheOptions (question_id, option_id,option_text):
+    with connection.cursor() as cursor:
+        sql = "select question_id, option_text from options WHERE option_id = '{}' AND question_id ='{}'AND option_text='{}'".format(question_id, option_id,option_text)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        return result
+    print(result)
+
+def Adventure(question_id,user_id):
+    
+
 @route("/story", method="POST")
 # def story():
 #     user_id = request.POST.get("user")
