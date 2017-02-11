@@ -4,7 +4,11 @@ Adventures.SERVER_PATH = window.location.href.slice(0,-1);
 Adventures.questionId = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
 Adventures.currentStep = 0;//todo keep track from db
+<<<<<<< HEAD
 Adventures.username = "";//todo keep track from db
+=======
+Adventures.username = 0;//todo keep track from db
+>>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
 Adventures.coins = 10;
 Adventures.life = 100;
 Adventures.optionId;

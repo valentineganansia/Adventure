@@ -13,7 +13,11 @@ def index():
 def start(): #I just change everything here Olivia.
 
     with connection.cursor() as cursor:
+<<<<<<< HEAD
         username = request.POST.get("username").lower()
+=======
+        username = request.POST.get("username")
+>>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
         question_id = request.POST.get("question_id")
         user_id = 0
         question_id = 0
@@ -112,6 +116,7 @@ def knowTheOptions (question_id, option_id,option_text):
     print(result)
 
 def Adventure(question_id,user_id):
+<<<<<<< HEAD
     
 
  # @route("/story", method="POST")
@@ -132,6 +137,24 @@ def Adventure(question_id,user_id):
 # ]
 
      # todo add the next step based on db
+=======
+
+
+@route("/story", method="POST")
+# def story():
+#     user_id = request.POST.get("user")
+#     question_id = request.POST.get("adventure")
+#     next_question_id = request.POST.get("next") #this is what the user chose - use it!
+#     option_id = [
+#         {"id": 1, "option_text": "I run!"},
+#         {"id": 2, "option_text": "I hide!"},
+#         {"id": 3, "option_text": "I sleep!"},
+#         {"id": 4, "option_text": "I fight!"}
+#         ]
+#     random.shuffle(next_question_id) #todo change - used only for demonstration purpouses
+#
+#     todo add the next step based on db
+>>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
     # return json.dumps({"user": user_id,
     #                    "adventure": question_id,
     #                    "next": next_question_id,
@@ -139,9 +162,12 @@ def Adventure(question_id,user_id):
     #                    "image": "choice.jpg",
     #                    "options": option_id
     #                    })
+<<<<<<< HEAD
  # except:
 
  # return json.dumps({'error': 'something is wrong with the DB})
+=======
+>>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
 
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):
