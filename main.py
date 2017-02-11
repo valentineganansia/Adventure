@@ -13,7 +13,7 @@ def index():
 def start(): #I just change everything here Olivia.
 
     with connection.cursor() as cursor:
-        username = request.POST.get("username")
+        username = request.POST.get("username").lower()
         question_id = request.POST.get("question_id")
         user_id = 0
         question_id = 0
@@ -114,20 +114,24 @@ def knowTheOptions (question_id, option_id,option_text):
 def Adventure(question_id,user_id):
     
 
-@route("/story", method="POST")
-# def story():
-#     user_id = request.POST.get("user")
-#     question_id = request.POST.get("adventure")
-#     next_question_id = request.POST.get("next") #this is what the user chose - use it!
-#     option_id = [
-#         {"id": 1, "option_text": "I run!"},
-#         {"id": 2, "option_text": "I hide!"},
-#         {"id": 3, "option_text": "I sleep!"},
-#         {"id": 4, "option_text": "I fight!"}
-#         ]
-#     random.shuffle(next_question_id) #todo change - used only for demonstration purpouses
-#
-#     todo add the next step based on db
+ # @route("/story", method="POST")
+ # def story():
+ #     username = request.POST.get("username")
+ #     question_id = request.POST.get("adventure")
+ #     next_question_id = request.POST.get("next") #this is what the user chose - use it!
+ #     try:
+        # with connection.cursor() as cursor:
+        #     cursor.execute(sql)
+        #     result = cursor.fetchall()
+
+ # next_steps_results = [
+ #                     {"id": 1, "option_text": "I run!"},
+ #                     {"id": 2, "option_text": "I hide!"},
+ #                    {"id": 3, "option_text": "I sleep!"},
+ #                   {"id": 4, "option_text": "I fight!"}
+# ]
+
+     # todo add the next step based on db
     # return json.dumps({"user": user_id,
     #                    "adventure": question_id,
     #                    "next": next_question_id,
@@ -135,6 +139,9 @@ def Adventure(question_id,user_id):
     #                    "image": "choice.jpg",
     #                    "options": option_id
     #                    })
+ # except:
+
+ # return json.dumps({'error': 'something is wrong with the DB})
 
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):

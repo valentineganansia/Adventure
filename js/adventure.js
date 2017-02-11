@@ -4,7 +4,7 @@ Adventures.SERVER_PATH = window.location.href.slice(0,-1);
 Adventures.questionId = 0; //todo keep track from db
 //currentStep is used for the step we're currently on (id). This should be determined at every crossroad, depending on what the user chose
 Adventures.currentStep = 0;//todo keep track from db
-Adventures.username = 0;//todo keep track from db
+Adventures.username = "";//todo keep track from db
 Adventures.coins = 10;
 Adventures.life = 100;
 Adventures.optionId;
@@ -73,6 +73,14 @@ Adventures.chooseOption = function(){
 };
 
 Adventures.write = function (message) {
+if (Adventures.life <= 0){
+        Adventures.GameResult()
+        return
+    }
+else if (Adventures.coins<=0){
+        Adventures.GameResult()
+        return
+}
     //Writing new choices and image to screen
     $(".situation-text").text(message["text"]).show();
     for(var i=0;i<message['options'].length;i++){
@@ -81,7 +89,19 @@ Adventures.write = function (message) {
         opt.prop("value", message['options'][i]['id']);
     }
     Adventures.setImage(message["image"]);
+    Adventures.updateUserGameOver();
 };
+
+Adventures.updateUserGameOver() = function(){
+    $("#life").prop("value", Adventures.life)
+    $("#coins").text(Adventures.coins)
+};
+
+Adventures.GameResult= function(){
+    $(".situation-text").text("You died because of your bad decisions!")
+    Adventures.updateUserGameOver();
+}
+
 
 
 Adventures.start = function(){
