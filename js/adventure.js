@@ -102,7 +102,7 @@ Adventures.updateUserGameOver() = function(){
 };
 
 Adventures.GameResult= function(){
-    $(".situation-text").text("You died because of your bad decisions!")
+    $(".situation-text").text("You died because you took bad decisions!")
     Adventures.updateUserGameOver();
 }
 
