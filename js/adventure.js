@@ -14,6 +14,7 @@ Adventures.life = 100;
 Adventures.optionId;
 Adventures.nextQuestionId;
 Adventures.options;
+Adventures.picture;
 
 
 Adventures.gameOver= false; //defining the game to false because we don't know already what's going on.
@@ -55,7 +56,8 @@ Adventures.chooseOption = function(){
             "nextquestion": Adventures.nextQuestionId,
             "coins":Adventures.coins,
             "life":Adventures.life,
-            "options":Adventures.options},
+            "options":Adventures.options,
+            "picture":Adventures.picture},
 
         dataType: "json",
         contentType: "application/json",

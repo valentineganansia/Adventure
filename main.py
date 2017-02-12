@@ -72,14 +72,14 @@ def Options(option_id): #I'm really not sure about this one but I don't had any 
       with connection.cursor() as cursor:
         sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(option_id)
         cursor.execute(sql)
-        print(["option_id"])
+        print("option_id") #with or without brackets ?
         return option_id
 
 def nextQuestions (question_id,next_question_id):
     with connection.cursor() as cursor:
         sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
         cursor.execute(sql)
-        print(["next_question_id"])
+        print("next_question_id")#with or without brackets ?
         return question_id,next_question_id
 
 def updateUser(coins,life,next_question_id,question_id):
@@ -88,6 +88,7 @@ def updateUser(coins,life,next_question_id,question_id):
         cursor.execute(sql)
         connection.commit()
         print(coins,life,next_question_id,question_id)
+        return coins,life,next_question_id,question_id
 
 def insert_user_name(username):
     with connection.cursor() as cursor:
