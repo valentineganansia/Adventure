@@ -5,7 +5,6 @@ import pymysql
 
 connection = pymysql.connect(host='sql11.freesqldatabase.com', user='sql11157852', password='3CCGQMva6k',db='sql11157852', charset='utf8', cursorclass = pymysql.cursors.DictCursor)
 
-#test olivia tree
 @route("/", method="GET")
 def index():
     return template("adventure.html")
@@ -16,9 +15,6 @@ def start(): #I just change everything here Olivia.
     with connection.cursor() as cursor:
 
         username = request.POST.get("username").lower()
-
-        username = request.POST.get("username")
-
         question_id = request.POST.get("question_id")
         user_id = 0
         question_id = 0
@@ -116,6 +112,14 @@ def knowTheOptions (question_id, option_id,option_text):
         result = cursor.fetchall()
         return result
     print(result)
+
+def picture(question_id,picture):
+    with connection.cursor() as cursor:
+        sql="select picture from questions WHERE question_id='{}' AND picture='{}'".format(question_id,picture)
+        cursor.execute(sql)
+        return question_id,picture
+    print (question_id,picture)
+
 
 # def Adventure(question_id,user_id):
 
