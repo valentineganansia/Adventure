@@ -55,7 +55,7 @@ Adventures.chooseOption = function(){
             "nextquestion": Adventures.nextQuestionId,
             "coins":Adventures.coins,
             "life":Adventures.life,
-            "options":Adventures.options}
+            "options":Adventures.options},
 
         dataType: "json",
         contentType: "application/json",
@@ -96,7 +96,7 @@ else if (Adventures.coins<=0){
     Adventures.updateUserGameOver();
 };
 
-Adventures.updateUserGameOver() = function(){
+Adventures.updateUserGameOver = function(){
     $("#life").prop("value", Adventures.life)
     $("#coins").text(Adventures.coins)
 };
