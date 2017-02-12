@@ -14,50 +14,22 @@ def start(): #I just change everything here Olivia.
 
     with connection.cursor() as cursor:
 
-        username = request.POST.get("username").lower()
+        username = request.POST.get("username")
         question_id = request.POST.get("question_id")
         user_id = 0
-        question_id = 0
         print (username)
         sql = "SELECT username, user_id FROM Users where username='{}'".format(username)
         cursor.execute(sql)
         result = cursor.fetchall()
         if result:
-            print("User already there", result)
+            print("User already exists in database")
         else:
-            print("else, no username")
-            newUser = "INSERT INTO Users (username, question_id) VALUES ('{0}', '{1}')".format(username,
-                                                                                               question_id)
+            print("Adding user to database")
+            newUser = "INSERT INTO Users (username, question_id) VALUES ('{0}', '{1}')".format(username,question_id)
             cursor.execute(newUser)
             connection.commit()
             print("new username result:",username)
 
-
-    # return json.dump({"username": user_name,
-    #                    "questionId": question_id,
-    #                     "nextquestion":nextquestion,
-    #                    "coins": coins,
-    #                    "life": life,
-    #                    "option": option,
-    #                    })
-
-            # next_steps_results = [
-            #     {"id": 1, "option_text": "I fight it"},
-            #     {"id": 2, "option_text": "I give him 10 coins"},
-            #     {"id": 3, "option_text": "I tell it that I just want to go home"},
-            #     {"id": 4, "option_text": "I run away quickly"}
-            #     ]
-
-    #todo add the next step based on db
-            # return json.dumps({"user": user_id,
-                                # "username":username,
-            #                    "questionId": question_id,
-            #                    "nextQuestion": next_question_id, #is this right?????
-            #                    "image": "troll.png",
-            #                    "options": option_id,
-            #                    })
-    # except Exception as a:
-    #     print(repr(a))
 
 def UserInfo():
     with connection.cursor() as cursor:
@@ -68,33 +40,44 @@ def UserInfo():
     print(user_id)
     return user_id
 
-def Options(option_id): #I'm really not sure about this one but I don't had any error message so I think it works.
+def Options(question_id): #I'm really not sure about this one but I don't had any error message so I think it works.
       with connection.cursor() as cursor:
-        sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(option_id)
+        sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(question_id)
         cursor.execute(sql)
-        print("option_id") #with or without brackets ?
-        return option_id
+        result = cursor.fetchall() # now have option_id set to result (in the format as a list of dictionaries. 4 dicts with one element in each)
+        print(result) #with or without brackets ?
+        return json.dumps({
+                           "options": result
+                           })
 
-def nextQuestions (question_id,next_question_id):
+
+def nextQuestions (question_id,option_id):
     with connection.cursor() as cursor:
-        sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
+        sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,option_id)
         cursor.execute(sql)
+        result = cursor.fetchall()
         print("next_question_id")#with or without brackets ?
-        return question_id,next_question_id
+        return result[0]["next_question_id"] #this will return the integer value of the next question id
 
 def updateUser(coins,life,next_question_id,question_id):
     with connection.cursor() as cursor:
         sql = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
         cursor.execute(sql)
         connection.commit()
-        print(coins,life,next_question_id,question_id)
         return coins,life,next_question_id,question_id
+
+def getCoinsAndLife(user_id):
+    with connection.cursor() as cursor:
+        sql = "SELECT coins, life from Users WHERE user_id='{}' ".format(user_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        return result[0]["coins"], result[1]["life"]
 
 def insert_user_name(username):
     with connection.cursor() as cursor:
         sql = "INSERT INTO users(`username`) VALUES (%s)"
         cursor.execute(sql, username)
-        connection.commit()
+        connection.commit() #do I need to fetchall when we insert?
         return insert_user_name()
 
 def gameOver(user_id):
@@ -112,63 +95,40 @@ def knowTheOptions (question_id, option_id,option_text):
         cursor.execute(sql)
         result = cursor.fetchall()
         return result
-    print(result)
+        print(result)
 
-def picture(question_id,picture):
+def picture(question_id):
     with connection.cursor() as cursor:
-        sql="select picture from questions WHERE question_id='{}' AND picture='{}'".format(question_id,picture)
+        sql="SELECT picture FROM questions WHERE question_id='{}'".format(question_id)
         cursor.execute(sql)
-        return question_id,picture
-    print (question_id,picture)
+        result = cursor.fetchall()
+        print(result)
+        return result[0]["picture"] #get the resulting picture as the string of the selected image
 
 
-# def Adventure(question_id,user_id):
+@route("/story", method="POST")
 
-    
+def story():
+    user_id = request.POST.get("user") #what are these POST requests doing? Necessary if we are getting the info from functions?
+    question_id = request.POST.get("adventure")
+    option_id = request.POST.get("next") #this is what the user chose - use it!
 
-# @route("/story", method="POST")
-# def story():
-#     username = request.POST.get("username")
-#     question_id = request.POST.get("adventure")
-#     next_question_id = request.POST.get("next") #this is what the user chose - use it!
-#     try:
-        # with connection.cursor() as cursor:
-        #cursor.execute(sql)
-        #result = cursor.fetchall()
-
- # next_steps_results = [
- #                     {"id": 1, "option_text": "I run!"},
- #                     {"id": 2, "option_text": "I hide!"},
- #                    {"id": 3, "option_text": "I sleep!"},
- #                   {"id": 4, "option_text": "I fight!"}
-# ]
-
-     # todo add the next step based on db
+    user_id_recieved = UserInfo()
+    next_question_id = nextQuestions(question_id, option_id)
+    current_option = Options(next_question_id)
+    coin, life = getCoinsAndLife(user_id)
+    picture_selected = picture(question_id)
 
 
-
-# @route("/story", method="POST")
-# def story():
-#     user_id = request.POST.get("user")
-#     question_id = request.POST.get("adventure")
-#     next_question_id = request.POST.get("next") #this is what the user chose - use it!
-#     option_id = [
-#         {"id": 1, "option_text": "I run!"},
-#         {"id": 2, "option_text": "I hide!"},
-#         {"id": 3, "option_text": "I sleep!"},
-#         {"id": 4, "option_text": "I fight!"}
-#         ]
-#     random.shuffle(next_question_id) #todo change - used only for demonstration purpouses
-#
-#     todo add the next step based on db
-
-    # return json.dumps({"user": user_id,
-    #                    "adventure": question_id,
-    #                    "next": next_question_id,
-    #                    "text":{},
-    #                    "image": "choice.jpg",
-    #                    "options": option_id
-    #                    })
+    return json.dumps({"user": user_id_recieved,
+                       "questionId": question_id,
+                       "nextquestion": next_question_id,
+                       "coins":coin,
+                       "life":life,
+                       "options": current_option,
+                       "picture":picture_selected,
+                       "options": current_option
+                       })
 
  # except:
 

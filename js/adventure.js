@@ -7,8 +7,6 @@ Adventures.currentStep = 0;//todo keep track from db
 
 Adventures.username = "";//todo keep track from db
 
-Adventures.username = 0;//todo keep track from db
-
 Adventures.coins = 10;
 Adventures.life = 100;
 Adventures.optionId;
@@ -18,7 +16,6 @@ Adventures.picture;
 
 
 Adventures.gameOver= false; //defining the game to false because we don't know already what's going on.
-//Adventures.questions=0;
 
 
 //TODO: remove for production
@@ -57,57 +54,48 @@ Adventures.chooseOption = function(){
             "coins":Adventures.coins,
             "life":Adventures.life,
             "options":Adventures.options,
-            "picture":Adventures.picture},
+            "picture":Adventures.picture,
+            "next": Adventures.currentStep}, //what does currentStep do?
 
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
             console.log(data);
             $(".greeting-text").hide();
+
             Adventures.write(data);
-            Adventures.coins=data.coins;
-            console.log(Adventures.coins);
-            Adventures.life=data.life; // we would need to create it in the database
-            console.log(Adventures.life);
-            $("#coins").text(Adventures.coins); // we would need to create it in the database
-            $('#life').text(Adventures.life);
-            Adventures.gameOver=data.gameOver; // we would need to create it in the database
-            console.log(Adventures.gameOver);
-            Adventures.restart();
+
         }
     });
 };
 
 Adventures.write = function (message) {
-if (Adventures.life <= 0){
+
+if (message[Adventures.life] <= 0 || message[Adventures.coins] <= 0){
         Adventures.GameResult()
         return
     }
-else if (Adventures.coins<=0){
-        Adventures.GameResult()
-        return
-}
+
     //Writing new choices and image to screen
-    $(".situation-text").text(message["text"]).show();
-    for(var i=0;i<message['options'].length;i++){
+    $(".situation-text").text(message["text"]).show(); //message is the json file we recieved from the backend
+    for(var i=0;i<message['options'].length;i++){ //
         var opt = $("#option_" + (i+1));
         opt.text(message['options'][i]['option_text']);
         opt.prop("value", message['options'][i]['id']);
     }
-    Adventures.setImage(message["image"]);
+    Adventures.setImage(message[Adventures.picture]);
     Adventures.updateUserGameOver();
 };
 
 Adventures.updateUserGameOver = function(){
-    $("#life").prop("value", Adventures.life)
-    $("#coins").text(Adventures.coins)
+    $("#life").prop("value", message[Adventures.life])
+    $("#coins").text(message[Adventures.coins])
 };
 
 Adventures.GameResult= function(){
     $(".situation-text").text("You died because you took bad decisions!")
     Adventures.updateUserGameOver();
 }
-
 
 
 Adventures.start = function(){
@@ -124,8 +112,8 @@ Adventures.start = function(){
 };
 
 //Setting the relevant image according to the server response
-Adventures.setImage = function (img_name) {
-    $("#situation-image").attr("src", "./images/" + img_name);
+Adventures.setImage = function (img){
+    $("#situation-image").attr("src", "./images/" + img);
 };
 
 Adventures.checkName = function(){
