@@ -13,11 +13,11 @@ def index():
 def start(): #I just change everything here Olivia.
 
     with connection.cursor() as cursor:
-<<<<<<< HEAD
+
         username = request.POST.get("username").lower()
-=======
+
         username = request.POST.get("username")
->>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
+
         question_id = request.POST.get("question_id")
         user_id = 0
         question_id = 0
@@ -79,33 +79,34 @@ def Options(option_id): #I'm really not sure about this one but I don't had any 
         return option_id
 
 def nextQuestions (question_id,next_question_id):
-       with connection.cursor() as cursor:
-         sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
-         cursor.execute(sql)
-         print(["next_question_id"])
-         return question_id,next_question_id
+    with connection.cursor() as cursor:
+        sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,next_question_id)
+        cursor.execute(sql)
+        print(["next_question_id"])
+        return question_id,next_question_id
 
 def updateUser(coins,life,next_question_id,question_id):
-       with connection.cursor() as cursor:
-           sql = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
-           cursor.execute(sql)
-           connection.commit()
-           print(coins,life,next_question_id,question_id)
+    with connection.cursor() as cursor:
+        sql = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
+        cursor.execute(sql)
+        connection.commit()
+        print(coins,life,next_question_id,question_id)
 
 def insert_user_name(username):
-      with connection.cursor() as cursor:
-           sql = "INSERT INTO users(`username`) VALUES (%s)"
-           cursor.execute(sql, username)
-           connection.commit()
+    with connection.cursor() as cursor:
+        sql = "INSERT INTO users(`username`) VALUES (%s)"
+        cursor.execute(sql, username)
+        connection.commit()
+        return insert_user_name()
 
 def gameOver(user_id):
-      with connection.cursor() as cursor:
-          end = True
-          print(end)
-          sql = "UPDATE Users SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(10,100,user_id)
-          cursor.execute(sql)
-          connection.commit()
-          return True
+    with connection.cursor() as cursor:
+        end = True
+        print(end)
+        sql = "UPDATE Users SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(10,100,user_id)
+        cursor.execute(sql)
+        connection.commit()
+        return True
 
 def knowTheOptions (question_id, option_id,option_text):
     with connection.cursor() as cursor:
@@ -115,19 +116,19 @@ def knowTheOptions (question_id, option_id,option_text):
         return result
     print(result)
 
-def Adventure(question_id,user_id):
-<<<<<<< HEAD
+# def Adventure(question_id,user_id):
+
     
 
- # @route("/story", method="POST")
- # def story():
- #     username = request.POST.get("username")
- #     question_id = request.POST.get("adventure")
- #     next_question_id = request.POST.get("next") #this is what the user chose - use it!
- #     try:
+# @route("/story", method="POST")
+# def story():
+#     username = request.POST.get("username")
+#     question_id = request.POST.get("adventure")
+#     next_question_id = request.POST.get("next") #this is what the user chose - use it!
+#     try:
         # with connection.cursor() as cursor:
-        #     cursor.execute(sql)
-        #     result = cursor.fetchall()
+        #cursor.execute(sql)
+        #result = cursor.fetchall()
 
  # next_steps_results = [
  #                     {"id": 1, "option_text": "I run!"},
@@ -137,10 +138,10 @@ def Adventure(question_id,user_id):
 # ]
 
      # todo add the next step based on db
-=======
 
 
-@route("/story", method="POST")
+
+# @route("/story", method="POST")
 # def story():
 #     user_id = request.POST.get("user")
 #     question_id = request.POST.get("adventure")
@@ -154,7 +155,7 @@ def Adventure(question_id,user_id):
 #     random.shuffle(next_question_id) #todo change - used only for demonstration purpouses
 #
 #     todo add the next step based on db
->>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
+
     # return json.dumps({"user": user_id,
     #                    "adventure": question_id,
     #                    "next": next_question_id,
@@ -162,12 +163,12 @@ def Adventure(question_id,user_id):
     #                    "image": "choice.jpg",
     #                    "options": option_id
     #                    })
-<<<<<<< HEAD
+
  # except:
 
  # return json.dumps({'error': 'something is wrong with the DB})
-=======
->>>>>>> 29018ae504f23ea2f716e2b199bbb901b01693f4
+
+
 
 @route('/js/<filename:re:.*\.js$>', method='GET')
 def javascripts(filename):
