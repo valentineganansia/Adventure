@@ -70,32 +70,19 @@ Adventures.chooseOption = function(){
 };
 
 Adventures.write = function (message) {
-
-    if (message[Adventures.life] <= 0 || message[Adventures.coins] <= 0){
-            Adventures.GameResult()
-            return
-        }
-
-        //Writing new choices and image to screen
-        $(".situation-text").text(message["text"]).show(); //message is the json file we recieved from the backend
-        for(var i=0;i<message['options'].length;i++){ //
-            var opt = $("#option_" + (i+1));
-            opt.text(message['options'][i]['option_text']);
-            opt.prop("value", message['options'][i]['id']);
-        }
-        Adventures.setImage(message[Adventures.picture]);
-        Adventures.updateUserGameOver();
-    };
-
-    Adventures.updateUserGameOver = function(){
-        $("#life").prop("value", message[Adventures.life])
-        $("#coins").text(message[Adventures.coins])
-    };
-
-    Adventures.GameResult= function(){
-        $(".situation-text").text("You died because you took bad decisions!")
-        Adventures.updateUserGameOver();
+    //Writing new choices and image to screen
+    $(".situation-text")
+        .text(message["question_text"])
+        .show();
+    for(var i=0;i<message["options"].length;i++){
+        var opt = $("#option_" + (i+1));
+        opt.text(message["options"][i]['option_text']);
+        opt.attr('data-option-id', message['optionId'][i]['option_id']);
+        opt.prop("value", message["options"][i]['option_id']);
     }
+    Adventures.setImage(message["picture"]);
+};
+
 
 
 Adventures.start = function(){
@@ -131,7 +118,7 @@ Adventures.initAdventure = function(){
     $.ajax("/start",{
         type: "POST",
         data: {"username": $("#nameField").val(),
-            "question_id": $(this).val()
+            "question_id": $(this).val(),
         },
         dataType: "json",
         contentType: "application/json",
@@ -140,7 +127,9 @@ Adventures.initAdventure = function(){
             Adventures.write(data);
             Adventures.questionId=data.questionId;
             Adventures.username=data.username;
-             $(".questionId").show();
+            Adventures.options = data.options;
+            Adventures.optionId = data.optionId;
+             $(".adventure").show();
             $(".welcome-screen").hide();
         }
     });

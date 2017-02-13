@@ -29,7 +29,20 @@ def start(): #I just change everything here Olivia.
             cursor.execute(newUser)
             connection.commit()
             print("new username result:",username)
-    return json.dumps({'username': username, 'questionId': question_id})
+        question = get_question_text(question_id)
+        list_of_options = get_Option_text(question_id)
+        optionId = get_Option_ID(question_id)
+
+        # next_q_id = nextQuestions(optionId)
+        picture = get_picture(question_id)
+    return json.dumps({'username': username,
+                       'questionId': question_id,
+                       'question_text':question,
+                       'options': list_of_options,
+                       "picture": picture,
+                       # "next_question_id": next_q_id,
+                       "optionId": optionId
+                    })
 
 def UserInfo():
     with connection.cursor() as cursor:
@@ -40,20 +53,36 @@ def UserInfo():
     print(user_id)
     return user_id
 
-def Options(question_id):
+def get_Option_text(question_id):
       with connection.cursor() as cursor:
-        sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(question_id)
+        sql = "SELECT option_text from Options where question_id='{}' ORDER BY option_id ASC".format(question_id)
         cursor.execute(sql)
         result = cursor.fetchall() # now have option_id set to result (in the format as a list of dictionaries. 4 dicts with one element in each)
         print(result)
-        return json.dumps({ #do we need to return this here, or just the integer in the object_id dictionary?
-                           "options": result
-                           })
+        return result
 
-
-def nextQuestions (question_id,option_id):
+def get_Option_ID(question_id):
     with connection.cursor() as cursor:
-        sql = "SELECT next_question_id from options WHERE question_id='{}' and option_id='{}'".format(question_id,option_id)
+        sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(question_id)
+        cursor.execute(sql)
+        result = cursor.fetchall()  # now have option_id set to result (in the format as a list of dictionaries. 4 dicts with one element in each)
+        print(result)
+        return result
+
+def get_question_text(question_id):
+    with connection.cursor() as cursor:
+        sql = "SELECT question_text FROM Questions WHERE question_id={}".format(question_id)
+        cursor.execute(sql)
+        connection.commit()
+        result = cursor.fetchone()
+        return result["question_text"]
+
+
+def nextQuestions (option_id):
+    with connection.cursor() as cursor:
+        sql = "SELECT next_question_id FROM Options WHERE option_id='{}'".format(option_id)
+        print(sql)
+
         cursor.execute(sql)
         result = cursor.fetchall()
         print("next_question_id")#with or without brackets ?
@@ -96,9 +125,9 @@ def knowTheOptions (question_id, option_id,option_text):
         result = cursor.fetchall() #this returns a list of dictionaries: we want to convert them to their values--how to do this for multiple key-value pairs?
         return result
 
-def picture(question_id):
+def get_picture(question_id):
     with connection.cursor() as cursor:
-        sql="SELECT picture FROM questions WHERE question_id='{}'".format(question_id)
+        sql="SELECT picture FROM Questions WHERE question_id='{}'".format(question_id)
         cursor.execute(sql)
         result = cursor.fetchall()
         print(result)
@@ -108,25 +137,22 @@ def picture(question_id):
 @route("/story", method="POST")
 
 def story():
-    user_id = request.POST.get("user") #what are these POST requests doing? Necessary if we are getting the info from functions?
-    question_id = request.POST.get("adventure")
+    user_id = request.POST.get("username") #what are these POST requests doing? Necessary if we are getting the info from functions?
     option_id = request.POST.get("next") #this is what the user chose - use it!
 
     user_id_recieved = UserInfo()
     next_question_id = nextQuestions(question_id, option_id)
-    current_option = Options(next_question_id)
+    next_options = get_Option_text(next_question_id) #list of 4 dicts
+
     coin, life = getCoinsAndLife(user_id)
-    picture_selected = picture(question_id)
+    picture_selected = get_picture(question_id)
 
 
-    return json.dumps({"user": user_id_recieved,
+    return json.dumps({"username": user_id_recieved,
                        "questionId": question_id,
                        "nextquestion": next_question_id,
-                       "coins":coin,
-                       "life":life,
-                       "options": current_option,
-                       "picture":picture_selected,
-                       "options": current_option
+                       "options": next_options,
+                       "picture":picture_selected
                        })
 
  # except:
