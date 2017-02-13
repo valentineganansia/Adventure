@@ -29,7 +29,7 @@ def start(): #I just change everything here Olivia.
             cursor.execute(newUser)
             connection.commit()
             print("new username result:",username)
-
+    return json.dumps({'username': username, 'questionId': question_id})
 
 def UserInfo():
     with connection.cursor() as cursor:
@@ -40,13 +40,13 @@ def UserInfo():
     print(user_id)
     return user_id
 
-def Options(question_id): #I'm really not sure about this one but I don't had any error message so I think it works.
+def Options(question_id):
       with connection.cursor() as cursor:
         sql = "SELECT option_id from Options where question_id='{}' ORDER BY option_id ASC".format(question_id)
         cursor.execute(sql)
         result = cursor.fetchall() # now have option_id set to result (in the format as a list of dictionaries. 4 dicts with one element in each)
-        print(result) #with or without brackets ?
-        return json.dumps({
+        print(result)
+        return json.dumps({ #do we need to return this here, or just the integer in the object_id dictionary?
                            "options": result
                            })
 
@@ -64,20 +64,20 @@ def updateUser(coins,life,next_question_id,question_id):
         sql = "UPDATE user_id SET question_id='{}',coins='{}',life='{}' WHERE user_id='{}'".format(coins,life,next_question_id,question_id)
         cursor.execute(sql)
         connection.commit()
-        return coins,life,next_question_id,question_id
+        return coins,life,next_question_id,question_id #is this what should be returned?
 
 def getCoinsAndLife(user_id):
     with connection.cursor() as cursor:
         sql = "SELECT coins, life from Users WHERE user_id='{}' ".format(user_id)
         cursor.execute(sql)
         result = cursor.fetchall()
-        return result[0]["coins"], result[1]["life"]
+        return result[0]["coins"], result[1]["life"] #will this work?
 
 def insert_user_name(username):
     with connection.cursor() as cursor:
         sql = "INSERT INTO users(`username`) VALUES (%s)"
         cursor.execute(sql, username)
-        connection.commit() #do I need to fetchall when we insert?
+        connection.commit()
         return insert_user_name()
 
 def gameOver(user_id):
@@ -93,9 +93,8 @@ def knowTheOptions (question_id, option_id,option_text):
     with connection.cursor() as cursor:
         sql = "select question_id, option_text from options WHERE option_id = '{}' AND question_id ='{}'AND option_text='{}'".format(question_id, option_id,option_text)
         cursor.execute(sql)
-        result = cursor.fetchall()
+        result = cursor.fetchall() #this returns a list of dictionaries: we want to convert them to their values--how to do this for multiple key-value pairs?
         return result
-        print(result)
 
 def picture(question_id):
     with connection.cursor() as cursor:
